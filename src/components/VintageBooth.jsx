@@ -1,7 +1,10 @@
 import { useRef, useState } from "react";
 import Webcam from "react-webcam";
 
-const videoConstraints = { width: 640, height: 480, facingMode: "user" };
+const videoConstraints = {
+  facingMode: "user",
+};
+
 
 function getTimestamp() {
   const date = new Date();
@@ -52,6 +55,7 @@ export default function PhotoBoothStrip() {
         ctx.lineWidth = 6;
         ctx.strokeRect(pad - 4, y - 4, w + 8, h + 8);
         ctx.filter = "contrast(1.1)";
+        // ctx.scale(-1, 1);
         ctx.drawImage(img, pad, y, w, h);
         ctx.filter = "none";
 
@@ -106,13 +110,14 @@ export default function PhotoBoothStrip() {
 
         {!stripImage && (
           <>
-            <div className="mx-auto rounded-2xl overflow-hidden shadow-2xl border-[4px] border-pink-400">
+            <div className="w-full max-w-[600px] aspect-[4/3] md:aspect-[16/9] flex justify-center items-center mx-auto">
               <Webcam
                 ref={camRef}
                 audio={false}
                 screenshotFormat="image/jpeg"
                 videoConstraints={videoConstraints}
-                className="rounded-md w-[500px] h-[360px] object-cover"
+                 mirrored={false}
+                className="w-full h-full object-cover rounded-lg transform scale-x-[-1]"
               />
             </div>
 
