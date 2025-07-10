@@ -25,8 +25,7 @@ const [selectedFilter, setSelectedFilter] = useState("none");
 
   const videoConstraints = {
     facingMode: facingMode,
-    width: 640,
-    height: 480,
+    
   };
 
   const startCountdown = () => {
@@ -49,18 +48,26 @@ const [selectedFilter, setSelectedFilter] = useState("none");
 
  const captureNow = () => {
   const shot = camRef.current.getScreenshot();
-  const updated = [...captures, { shot }];
-  setCaptures(updated);
-  if (updated.length === 3) {
-    renderStrip(updated, selectedFilter);  // ✅ pass filter here
-  }
+  const img = new Image();
+  img.src = shot;
+  img.onload = () => {
+    const updated = [...captures, { shot, width: img.width, height: img.height }];
+    setCaptures(updated);
+    if (updated.length === 3) {
+      renderStrip(updated, selectedFilter);
+    }
+  };
 };
+
 
 
   const renderStrip = (images, selectedFilter) => {
   const canvas = canvasRef.current;
-  const w = 500, h = 360, gap = 20, pad = 40;
+  const w = 500;
+  const gap = 20;
+  const pad = 40;
   const footerHeight = 120;
+  const h = w * (images[0].height / images[0].width); // preserve aspect ratio
 
   canvas.width = w + pad * 2;
   canvas.height = (h + gap) * 3 + pad * 2 + footerHeight;
@@ -75,12 +82,10 @@ const [selectedFilter, setSelectedFilter] = useState("none");
 
     img.onload = () => {
       const y = pad + i * (h + gap);
-
       ctx.save();
-      ctx.translate(canvas.width, 0); // flip horizontally
+      ctx.translate(canvas.width, 0);
       ctx.scale(-1, 1);
-
-      ctx.filter = selectedFilter || "none"; // ✅ Apply the selected filter
+      ctx.filter = selectedFilter || "none";
       ctx.drawImage(img, canvas.width - (pad + w), y, w, h);
       ctx.restore();
 
@@ -101,20 +106,6 @@ const [selectedFilter, setSelectedFilter] = useState("none");
   });
 };
 
-  const getCanvasFilter = (filter) => {
-    switch (filter) {
-      case "grayscale":
-        return "grayscale(1)";
-      case "sepia":
-        return "sepia(1)";
-      case "contrast":
-        return "contrast(1.4)";
-      case "saturate":
-        return "saturate(1.5)";
-      default:
-        return "none";
-    }
-  };
 
   const drawFooter = (ctx, canvasWidth, canvasHeight, pad, userName) => {
     ctx.font = "32px 'Great Vibes', cursive";
