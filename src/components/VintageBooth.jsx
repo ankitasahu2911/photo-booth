@@ -166,7 +166,7 @@ const [selectedFilter, setSelectedFilter] = useState("none");
   screenshotFormat="image/jpeg"
   videoConstraints={{ facingMode }}
   mirrored={false}
-  className="w-full max-w-[500px] aspect-[4/3] object-cover transform scale-x-[-1]"
+   className="w-full max-w-[500px] aspect-[4/3] object-contain transform scale-x-[-1]"
   style={{ filter: selectedFilter }}
 />
 
@@ -234,7 +234,10 @@ const [selectedFilter, setSelectedFilter] = useState("none");
               src={stripImage}
               alt="Photo Strip"
               className="rounded-lg border border-white shadow-2xl bg-white"
-              style={{ boxShadow: "0 0 15px rgba(0,0,0,0.4)", maxHeight: "95vh" }}
+              style={{ boxShadow: "0 0 15px rgba(0,0,0,0.4)",
+  maxHeight: "95vh",
+  maxWidth: "100%",
+  height: "auto", }}
             />
             <div className="flex gap-4 flex-wrap justify-center">
               <button
