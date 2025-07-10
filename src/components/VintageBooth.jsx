@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import Webcam from "react-webcam";
+import "./PhotoBoothStrip.css";
 
 function getTimestamp() {
   const date = new Date();
@@ -159,24 +160,23 @@ const [selectedFilter, setSelectedFilter] = useState("none");
 
         {!stripImage && (
           <>
-            <div className="relative w-full max-w-[640px] aspect-[4/3] flex justify-center items-center overflow-hidden">
-              <Webcam
-  ref={camRef}
-  audio={false}
-  screenshotFormat="image/jpeg"
-  videoConstraints={{ facingMode }}
-  mirrored={false}
-   className="w-full max-w-[500px] aspect-[4/3] object-contain transform scale-x-[-1]"
-  style={{ filter: selectedFilter }}
-/>
+            <div className="webcam-wrapper">
+  <Webcam
+    ref={camRef}
+    audio={false}
+    screenshotFormat="image/jpeg"
+    videoConstraints={{ facingMode }}
+    mirrored={false}
+    className="webcam-feed"
+    style={{ filter: selectedFilter }}
+  />
+  {countdown !== null && (
+    <div className="absolute inset-0 flex items-center justify-center text-7xl font-bold text-white drop-shadow-lg z-20 pointer-events-none">
+      {countdown}
+    </div>
+  )}
+</div>
 
-              {countdown !== null && (
-  <div className="absolute inset-0 flex items-center justify-center text-7xl font-bold text-white drop-shadow-lg z-20 pointer-events-none">
-    {countdown}
-  </div>
-)}
-
-            </div>
 
             {/* Filter selector + Input */}
             <div className="mt-6 flex flex-col sm:flex-row items-center gap-4">
@@ -230,15 +230,13 @@ const [selectedFilter, setSelectedFilter] = useState("none");
 
         {stripImage && (
           <div className="mt-10 flex flex-col items-center gap-6">
-            <img
-              src={stripImage}
-              alt="Photo Strip"
-              className="rounded-lg border border-white shadow-2xl bg-white"
-              style={{ boxShadow: "0 0 15px rgba(0,0,0,0.4)",
-  maxHeight: "95vh",
-  maxWidth: "100%",
-  height: "auto", }}
-            />
+           <img
+  src={stripImage}
+  alt="Photo Strip"
+  className="strip-image"
+/>
+
+           
             <div className="flex gap-4 flex-wrap justify-center">
               <button
                 onClick={downloadStrip}
